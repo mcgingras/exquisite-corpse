@@ -1,9 +1,11 @@
 import React from 'react';
 import './App.css';
 
+// components
 import Canvas from './components/canvas';
 
 function App() {
+
   return (
     <div className="App">
       <Canvas/>

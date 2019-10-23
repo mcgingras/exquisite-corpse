@@ -12,14 +12,26 @@ const Canvas = () => {
         lineWidth: 3
     });
 
+    const changeColor = (color) => {
+        setConfig({
+            ...config,
+            color
+        })
+    }
+
     return (
-        <SketchField 
-            className="canvas"
-            width='800px' 
-            height='600px' 
-            tool={Tools.Pencil} 
-            lineColor={config.color}
-            lineWidth={config.lineWidth}/>
+        <div>
+            <SketchField 
+                className="canvas"
+                width='50vw' 
+                height='50vh' 
+                tool={Tools.Pencil} 
+                lineColor={config.color}
+                lineWidth={config.lineWidth}/>
+            
+            <div onClick={() => {changeColor('red')}}>red</div>
+            <div onClick={() => {changeColor('black')}}>black</div>
+        </div>
     )
 }
 
