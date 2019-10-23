@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { useSelector } from 'react-redux'
-import { useFirestore, useFirestoreConnect } from 'react-redux-firebase'
+import { useFirestore } from 'react-redux-firebase'
+import { navigate } from 'hookrouter';
 
 /**
  * StartScreen Component
@@ -34,6 +34,8 @@ const StartScreen = () => {
              id,
              live: true
         })
+
+        navigate('/canvas');
     }
 
     /**
@@ -46,22 +48,24 @@ const StartScreen = () => {
         let fsref = await firestore.collection('games').get();
         let gameIDs = fsref.docs.map(doc => {return doc.data().id});
         gameIDs.includes(gameID) ? console.log('included') : console.log('not included');
-        
+        navigate('/canvas');
     }
 
     return (
-        <div>
-            <h1>Exquisite Corpse</h1>
+        <div className="App">
+            <div>
+                <h1>Exquisite Corpse</h1>
 
-            <h3>New Game</h3>
-            <button onClick={() => {startNewGame()}}>Start</button>
+                <h3>New Game</h3>
+                <button onClick={() => {startNewGame()}}>Start</button>
 
-            <h3>Join Game</h3>
-            <input  
-                type="text"
-                ref={joinGameEl}
-            />
-            <button onClick={() => {joinGame()}}>Join</button>
+                <h3>Join Game</h3>
+                <input  
+                    type="text"
+                    ref={joinGameEl}
+                />
+                <button onClick={() => {joinGame()}}>Join</button>
+            </div>
         </div>
     )
 }

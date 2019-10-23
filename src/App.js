@@ -4,6 +4,14 @@ import './App.css';
 // import components
 import Canvas from './components/canvas';
 import StartScreen from './components/startScreen';
+import NotFoundPage from './components/notFoundPage';
+import {useRoutes} from 'hookrouter';
+
+
+const routes = {
+  '/': () => <StartScreen />,
+  '/canvas': () => <Canvas />,
+};
 
 /**
  * @Anna
@@ -19,12 +27,8 @@ import StartScreen from './components/startScreen';
  * :)
  */
 function App() {
-  return (
-    <div className="App">
-      <StartScreen />
-      {/* <Canvas /> */}
-    </div>
-  );
+  const routeResult = useRoutes(routes);
+  return routeResult || <NotFoundPage />;
 }
 
 export default App;
