@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { useFirestore } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
+import { useFirestore, useFirestoreConnect } from 'react-redux-firebase'
 
 /**
  * StartScreen Component
@@ -20,16 +21,32 @@ const StartScreen = () => {
     const firestore = useFirestore();
     const joinGameEl = useRef(null);
 
+    
     const startNewGame = () => {
         let id = Math.random().toString(36).substring(8);
-        firestore.collection('games').add({ id })
+
+        /**
+         * document structure
+         * id - id of game
+         * live - boolean, if game is live or not, true
+         */
+        firestore.collection('games').add({
+             id,
+             live: true
+        })
     }
 
-    const joinGame = () => {
+    /**
+     * @note
+     * since we are using redux-firestore I think we might have this in redux?
+     * might have to subscribe to store first, not sure... can go back on this one.
+     */
+    async function joinGame() {
         const gameID = joinGameEl.current.value;
-        console.log(gameID);
+        let fsref = await firestore.collection('games').get();
+        let gameIDs = fsref.docs.map(doc => {return doc.data().id});
+        gameIDs.includes(gameID) ? console.log('included') : console.log('not included');
         
-        // check if game ID exists.
     }
 
     return (
