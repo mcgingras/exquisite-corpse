@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 // import components
-import Canvas from './components/canvas';
+import GameController from './components/gameController';
 import StartScreen from './components/startScreen';
 import NotFoundPage from './components/notFoundPage';
 import Showcase from './components/showcase';
@@ -11,7 +11,7 @@ import {useRoutes} from 'hookrouter';
 
 const routes = {
   '/': () => <StartScreen />,
-  '/canvas': () => <Canvas />,
+  '/draw': () => <GameController />,
   '/showcase': () => <Showcase />,
 };
 

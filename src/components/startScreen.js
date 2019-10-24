@@ -47,7 +47,7 @@ const StartScreen = () => {
              legs: null
         });
 
-        navigate('/canvas');
+        navigate('/draw');
     }
 
     /**
@@ -62,7 +62,7 @@ const StartScreen = () => {
         if(gameIDs.includes(gameID)){
             dispatch({ type: SET_GAME_ID, gameId: gameID });
             // figure out which part they have.
-            navigate('/canvas');
+            navigate('/draw');
         }
         else{
             alert('not a valid game! please try again.')
