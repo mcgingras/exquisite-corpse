@@ -2,7 +2,15 @@ import React, {useRef, useEffect, useSelector} from 'react';
 import {SketchField} from 'react-sketch';
 import { useFirestore } from 'react-redux-firebase'
 
-const Showcase = () => {
+/**
+ * showcase -- shows finished drawing.
+ * 
+ * @todo: what happens if url param is not valid?
+ * right now throws an error since it is used in the call to fb.
+ * should just add a check to make sure its there.
+ * 
+ */
+const Showcase = (props) => {
     // const gameId = useSelector(state => state.gameState.gameId);
     const firestore = useFirestore();
     const _sketch = useRef(null);
@@ -10,7 +18,7 @@ const Showcase = () => {
 
     useEffect(() => {
         async function loadData(){
-            let snap = await firestore.collection('games').doc('4wx0l').get();
+            let snap = await firestore.collection('games').doc(props.gameId).get();
             let head = snap.data().head;
             let torso = snap.data().torso;
             let leftArm = snap.data().leftArm;

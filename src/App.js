@@ -12,7 +12,7 @@ import {useRoutes} from 'hookrouter';
 const routes = {
   '/': () => <StartScreen />,
   '/draw': () => <GameController />,
-  '/showcase': () => <Showcase />,
+  '/showcase/:gameId': ({gameId}) => <Showcase gameId={gameId} />,
 };
 
 /**

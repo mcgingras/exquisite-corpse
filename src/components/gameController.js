@@ -45,7 +45,7 @@ const GameController = () => {
         setShowIntroduction(true);
     }
     
-    
+
     /**
      * logic for what screen to show (prompt vs canvas)
      * showIntroduction is boolean for showing prompt
@@ -68,7 +68,7 @@ const GameController = () => {
                 }
     
                 { isNextPart && isLastDrawing
-                 ? <button onClick={() => {navigate('/showcase')}}>showcase</button>
+                 ? <button onClick={() => {navigate(`/showcase/${gameId}`)}}>showcase</button>
                  : <button onClick={() => {setShowIntroduction(false)}}>ok</button>
                 }
             </div>

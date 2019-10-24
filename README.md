@@ -13,3 +13,5 @@ max one person per game
 
 
 what if someone quits without saving
+redux helpers.
+change favicon and all that stuff
