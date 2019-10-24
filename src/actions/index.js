@@ -15,6 +15,7 @@ export function setGameId(gameId){
 /**
  * 
  * @param {string} part - the body part currently in focus
+ * deprecated, using fb
  */
 export function setCurrentPart(part){
     return {
@@ -23,6 +24,11 @@ export function setCurrentPart(part){
     }
 }
 
+/**
+ * 
+ * @param {string} part - body part for next person
+ * deprecated, using fb
+ */
 export function setNextPart(part){
     return {
         type: SET_NEXT_PART,

@@ -58,7 +58,7 @@ const StartScreen = () => {
     async function joinGame() {
         const gameID = joinGameEl.current.value;
         let fsref = await firestore.collection('games').get();
-        let gameIDs = fsref.docs.map(doc => {return doc.data().id});
+        let gameIDs = fsref.docs.map(doc => {return doc.id});
         if(gameIDs.includes(gameID)){
             dispatch({ type: SET_GAME_ID, gameId: gameID });
             // figure out which part they have.

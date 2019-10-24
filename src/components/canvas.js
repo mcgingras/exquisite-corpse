@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {SketchField, Tools} from 'react-sketch';
 import { useSelector } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase'
 import { navigate } from 'hookrouter';
+import { partOrder } from '../constants/partOrder';
 
 /**
  * Canvas Component
@@ -23,7 +24,7 @@ const Canvas = () => {
     const firestore = useFirestore();
     const _sketch = useRef(null);
     const [showIntroduction, setShowIntroduction] = useState(true);
-    const [isNextPart, setNextPart] = useState(false);
+    const [isNextPart, setIsNextPart] = useState(false);
 
     /** state for config of canvas
      * --- 
@@ -35,10 +36,18 @@ const Canvas = () => {
         lineWidth: 3
     });
 
-    const gameId      = useSelector(state => state.gameState.gameId);
-    const currentPart = useSelector(state => state.gameState.currentPart);
-    const nextPart    = useSelector(state => state.gameState.nextPart);
+    const [currentPart, setCurrentPart] = useState(null);
+    const [nextPart, setNextPart] = useState(null);
+    const gameId = useSelector(state => state.gameState.gameId);
     
+    useEffect(() => {
+        async function loadFromFb(){
+            let gameData = await firestore.collection('games').doc(gameId).get();
+            setCurrentPart(gameData.data().currentPart);
+            setNextPart(partOrder[currentPart]);
+        } 
+        loadFromFb();
+    })
 
     async function fetchData(){
         let snap = await firestore.collection('games').doc('mk6l').get();
@@ -59,15 +68,16 @@ const Canvas = () => {
      */
     async function saveSketch() {
         let data = _sketch.current.toDataURL(); 
-        
+
         if(!isNextPart){
             let fsref = await firestore.collection('games').doc(gameId).update({[currentPart]: data});
             setShowIntroduction(true);
-            setNextPart(true);
+            setIsNextPart(true);
         }
         else{
             let fsref = await firestore.collection('games').doc(gameId).update({[nextPart]: data});
             // can navigate to a page saying thank you or something.
+            firestore.collection('games').doc(gameId).update({currentPart: nextPart});
             navigate('/');
         }
     }
@@ -85,9 +95,11 @@ const Canvas = () => {
                 {!isNextPart ?
                     <p>you are drawing {currentPart}</p>
                     :
-                    <p>start drawing {nextPart} for the next player</p>
+                    <p>{nextPart != null ? `Drawing finished! Go to showcase.` : `start drawing ${nextPart} for the next player` }</p>
+                    
                 }
-                <button onClick={() => {showCanvas()}}>ok</button>
+                {nextPart != null ? <button onClick={() => {showCanvas()}}>ok</button> : <button onClick={() => {navigate('/showcase')}}>showcase</button> }
+                
             </div>
             :
             <div>
