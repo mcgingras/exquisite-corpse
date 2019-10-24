@@ -38,6 +38,7 @@ const StartScreen = () => {
         var gamesRef = firestore.collection("games");
         gamesRef.doc(id).set({
              live: true,
+             currentPart: null,
              head: null,
              torso: null,
              leftArm: null,
@@ -57,8 +58,14 @@ const StartScreen = () => {
         const gameID = joinGameEl.current.value;
         let fsref = await firestore.collection('games').get();
         let gameIDs = fsref.docs.map(doc => {return doc.data().id});
-        gameIDs.includes(gameID) ? console.log('included') : console.log('not included');
-        navigate('/canvas');
+        if(gameIDs.includes(gameID)){
+            dispatch({ type: SET_GAME_ID, gameId: gameID });
+            // figure out which part they have.
+            navigate('/canvas');
+        }
+        else{
+            alert('not a valid game! please try again.')
+        } 
     }
 
     return (

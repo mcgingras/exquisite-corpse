@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import {SketchField, Tools} from 'react-sketch';
 import { useSelector } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase'
+import { navigate } from 'hookrouter';
 
 /**
  * Canvas Component
@@ -21,7 +22,8 @@ import { useFirestore } from 'react-redux-firebase'
 const Canvas = () => {
     const firestore = useFirestore();
     const _sketch = useRef(null);
-    const [showPart, setShowPart] = useState(true);
+    const [showIntroduction, setShowIntroduction] = useState(true);
+    const [lastDrawing, setLastDrawing] = useState(false);
 
     /** state for config of canvas
      * --- 
@@ -44,13 +46,6 @@ const Canvas = () => {
         _sketch.current.addImg(data, {left: 0, top: 0, scale: 1});
     }
 
-    const changeColor = (color) => {
-        setConfig({
-            ...config,
-            color
-        })
-    }
-
     const undoPath = () => {
         _sketch.current.undo();
     }
@@ -63,17 +58,34 @@ const Canvas = () => {
      * saves data at dataurl, which can be loaded in later.
      */
     async function saveSketch() {
-        let data = _sketch.current.toDataURL(); 
-        let fsref = await firestore.collection('games').doc(gameId).set({[currentPart]: data});
+        if(!lastDrawing){
+            let data = _sketch.current.toDataURL(); 
+            // let fsref = await firestore.collection('games').doc(gameId).update({[currentPart]: data});
+            setShowIntroduction(true);
+            setLastDrawing(true);
+        }
+        else{
+            // can navigate to a page saying thank you or something.
+            navigate('/');
+        }
     }
-    
+
+    const showCanvas = () => {
+        setShowIntroduction(false);
+        // if data to fetch...
+        fetchData();
+    }
 
     return (
         <div>
-            {showPart ? 
+            {showIntroduction ? 
             <div>
-                you are drawing {currentPart}
-                <button onClick={() => {setShowPart(false); fetchData()}}>ok</button>
+                {!lastDrawing ?
+                    <p>you are drawing {currentPart}</p>
+                    :
+                    <p>start drawing {currentPart} for the next player</p>
+                }
+                <button onClick={() => {showCanvas()}}>ok</button>
             </div>
             :
             <div>
