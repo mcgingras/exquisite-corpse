@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {SketchField, Tools} from 'react-sketch';
 import { useSelector } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase'
@@ -34,13 +34,14 @@ const Canvas = () => {
     });
 
     const gameId = useSelector(state => state.gameState.gameId);
-    console.log(gameId);
+    const currentPart = useSelector(state => state.gameState.currentPart);
+    console.log(currentPart);
     
 
     async function fetchData(){
         let snap = await firestore.collection('games').doc('mk6l').get();
         let data = snap.data().data;
-        _sketch.current.addImg(data);
+        _sketch.current.addImg(data, {left: 0, top: 0, scale: 1});
     }
 
     const changeColor = (color) => {
@@ -59,17 +60,11 @@ const Canvas = () => {
     }
 
     /**
-     * not sure which one we are going to want
-     * data url is small, but im worried the position is going to make it hard to put back in.
-     * unless it gives entire canva
-     * 
-     * json is nice because its array of svg paths and position which we can swap back in.
+     * saves data at dataurl, which can be loaded in later.
      */
     async function saveSketch() {
-        let j = _sketch.current.toJSON();
-        let d = _sketch.current.toDataURL(); 
-        
-        let fsref = await firestore.collection('games').doc('mk6l').set({data: d});
+        let data = _sketch.current.toDataURL(); 
+        let fsref = await firestore.collection('games').doc(gameId).set({[currentPart]: data});
     }
     
 
@@ -77,7 +72,7 @@ const Canvas = () => {
         <div>
             {showPart ? 
             <div>
-                you are drawing head.
+                you are drawing {currentPart}
                 <button onClick={() => {setShowPart(false); fetchData()}}>ok</button>
             </div>
             :
@@ -87,8 +82,8 @@ const Canvas = () => {
                 <SketchField 
                     ref={_sketch}
                     className="canvas"
-                    width='50vw' 
-                    height='50vh' 
+                    width='300px' 
+                    height='300px' 
                     tool={Tools.Pencil} 
                     lineColor={config.color}
                     lineWidth={config.lineWidth

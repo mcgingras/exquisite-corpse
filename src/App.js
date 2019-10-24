@@ -5,12 +5,14 @@ import './App.css';
 import Canvas from './components/canvas';
 import StartScreen from './components/startScreen';
 import NotFoundPage from './components/notFoundPage';
+import Showcase from './components/showcase';
 import {useRoutes} from 'hookrouter';
 
 
 const routes = {
   '/': () => <StartScreen />,
   '/canvas': () => <Canvas />,
+  '/showcase': () => <Showcase />,
 };
 
 /**

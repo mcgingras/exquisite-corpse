@@ -1,7 +1,8 @@
-import { SET_GAME_ID } from '../constants/actions';
+import { SET_GAME_ID, SET_CURRENT_PART } from '../constants/actions';
 
 const initialState = {
-    gameId: null
+    gameId: null,
+    currentPart: null
 };
 
 export function gameState(state = initialState, action) {
@@ -10,6 +11,12 @@ export function gameState(state = initialState, action) {
             return {
                 ...state,
                 gameId: action.gameId
+            }
+        
+        case SET_CURRENT_PART:
+            return {
+                ...state,
+                currentPart: action.part
             }
 
         default:

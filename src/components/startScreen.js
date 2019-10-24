@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useFirestore } from 'react-redux-firebase'
 import { useDispatch } from 'react-redux';
 import { navigate } from 'hookrouter';
-import { SET_GAME_ID } from '../constants/actions';
+import { SET_GAME_ID, SET_CURRENT_PART } from '../constants/actions';
 
 /**
  * StartScreen Component
@@ -28,19 +28,21 @@ const StartScreen = () => {
     const startNewGame = () => {
         let id = Math.random().toString(36).substring(8);
         dispatch({ type: SET_GAME_ID, gameId: id });
+        dispatch({ type: SET_CURRENT_PART, part: 'head' });
 
         /**
          * document structure
-         * id - id of game
+         * id - id of game (gets set as document under collection)
          * live - boolean, if game is live or not, true
          */
         var gamesRef = firestore.collection("games");
         gamesRef.doc(id).set({
              live: true,
-             parts: {
-                 head: null,
-                 arm: null
-             }
+             head: null,
+             torso: null,
+             leftArm: null,
+             rightArm: null,
+             legs: null
         });
 
         navigate('/canvas');
