@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {SketchField, Tools} from 'react-sketch';
 import { useSelector } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase';
@@ -14,6 +14,18 @@ const Canvas = (props) => {
     const firestore = useFirestore();
     const _sketch = useRef(null);
     const gameId = useSelector(state => state.gameState.gameId);
+
+ 
+    useEffect(() => {
+        async function loadPreview(){
+            if(!props.isNextPart && props.currentPart != 'head'){
+                let snap = await firestore.collection('games').doc(gameId).get();
+                let startOfDrawing = snap.data()[props.currentPart];
+                _sketch.current.addImg(startOfDrawing, {left: 0, top: 0, scale: 1});
+            }
+        }
+        loadPreview();
+    })
 
 
     /** state for config of canvas

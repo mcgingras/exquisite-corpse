@@ -44,10 +44,8 @@ const GameController = () => {
         setIsNextPart(true);
         setShowIntroduction(true);
     }
-
-    console.log(isLastDrawing);
     
-
+    
     /**
      * logic for what screen to show (prompt vs canvas)
      * showIntroduction is boolean for showing prompt
