@@ -23,7 +23,7 @@ const Canvas = () => {
     const firestore = useFirestore();
     const _sketch = useRef(null);
     const [showIntroduction, setShowIntroduction] = useState(true);
-    const [lastDrawing, setLastDrawing] = useState(false);
+    const [isNextPart, setNextPart] = useState(false);
 
     /** state for config of canvas
      * --- 
@@ -35,9 +35,9 @@ const Canvas = () => {
         lineWidth: 3
     });
 
-    const gameId = useSelector(state => state.gameState.gameId);
+    const gameId      = useSelector(state => state.gameState.gameId);
     const currentPart = useSelector(state => state.gameState.currentPart);
-    console.log(currentPart);
+    const nextPart    = useSelector(state => state.gameState.nextPart);
     
 
     async function fetchData(){
@@ -58,13 +58,15 @@ const Canvas = () => {
      * saves data at dataurl, which can be loaded in later.
      */
     async function saveSketch() {
-        if(!lastDrawing){
-            let data = _sketch.current.toDataURL(); 
-            // let fsref = await firestore.collection('games').doc(gameId).update({[currentPart]: data});
+        let data = _sketch.current.toDataURL(); 
+        
+        if(!isNextPart){
+            let fsref = await firestore.collection('games').doc(gameId).update({[currentPart]: data});
             setShowIntroduction(true);
-            setLastDrawing(true);
+            setNextPart(true);
         }
         else{
+            let fsref = await firestore.collection('games').doc(gameId).update({[nextPart]: data});
             // can navigate to a page saying thank you or something.
             navigate('/');
         }
@@ -80,10 +82,10 @@ const Canvas = () => {
         <div>
             {showIntroduction ? 
             <div>
-                {!lastDrawing ?
+                {!isNextPart ?
                     <p>you are drawing {currentPart}</p>
                     :
-                    <p>start drawing {currentPart} for the next player</p>
+                    <p>start drawing {nextPart} for the next player</p>
                 }
                 <button onClick={() => {showCanvas()}}>ok</button>
             </div>

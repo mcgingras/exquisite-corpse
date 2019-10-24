@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useFirestore } from 'react-redux-firebase'
 import { useDispatch } from 'react-redux';
 import { navigate } from 'hookrouter';
-import { SET_GAME_ID, SET_CURRENT_PART } from '../constants/actions';
+import { SET_GAME_ID, SET_CURRENT_PART, SET_NEXT_PART } from '../constants/actions';
 
 /**
  * StartScreen Component
@@ -29,16 +29,17 @@ const StartScreen = () => {
         let id = Math.random().toString(36).substring(8);
         dispatch({ type: SET_GAME_ID, gameId: id });
         dispatch({ type: SET_CURRENT_PART, part: 'head' });
+        dispatch({ type: SET_NEXT_PART, part: 'torso' });
 
         /**
          * document structure
          * id - id of game (gets set as document under collection)
-         * live - boolean, if game is live or not, true
+         * occupied - boolean, if game is in session or not. Used if someone tries to join while occupied.
          */
         var gamesRef = firestore.collection("games");
         gamesRef.doc(id).set({
-             live: true,
-             currentPart: null,
+             occupied: true,
+             currentPart: 'head',
              head: null,
              torso: null,
              leftArm: null,

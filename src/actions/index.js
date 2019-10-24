@@ -1,4 +1,4 @@
-import { SET_GAME_ID, SET_CURRENT_PART } from '../constants/actions';
+import { SET_GAME_ID, SET_CURRENT_PART, SET_NEXT_PART } from '../constants/actions';
 
 /**
  * 
@@ -19,6 +19,13 @@ export function setGameId(gameId){
 export function setCurrentPart(part){
     return {
         type: SET_CURRENT_PART,
+        part
+    }
+}
+
+export function setNextPart(part){
+    return {
+        type: SET_NEXT_PART,
         part
     }
 }
